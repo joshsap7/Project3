@@ -22,9 +22,9 @@ public class ByteFileGenerator {
      *            number of records you want your byte file to have
      * @throws IOException
      */
-    public void generate(int numRecords) throws IOException {
+    public static DataOutputStream generate(int numRecords) throws IOException {
 
-        File file = new File("p3_input_sample.txt");
+        File file = new File("SampleInput.dat");
         DataOutputStream outs = new DataOutputStream(new FileOutputStream(file,
             false));
         for (int j = 0; j < numRecords; j++) {
@@ -39,5 +39,7 @@ public class ByteFileGenerator {
             outs.write(testB);
         }
         outs.close();
+        
+        return outs;
     }
 }

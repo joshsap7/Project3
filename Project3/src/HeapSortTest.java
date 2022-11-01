@@ -7,7 +7,7 @@ public class HeapSortTest extends TestCase {
 	private HeapSort dum;
 	
 	public void setUp() {
-		HeapSort dum = new HeapSort();
+		//HeapSort dum = new HeapSort();
 	}
 
     /**
@@ -16,12 +16,13 @@ public class HeapSortTest extends TestCase {
      */
     @Test
     public void testMain() {
-        HeapSort dum = new HeapSort();
+        //HeapSort dum = new HeapSort();
         assertNotNull(dum);
         HeapSort.main(new String[3]);
         assertEquals(systemOut().getHistory(), ""); // check that nothing was printed out
     }
-    @SuppressWarnings("rawtypes")
+    
+    
     public void testHeapSort() {
     	
 		int[] arr = {5, 2, 4, 12, 6, 3, 1, 56, 32, 523, 234, 134, 12314};

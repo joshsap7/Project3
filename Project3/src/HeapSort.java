@@ -116,6 +116,14 @@ public class HeapSort {
 	public void setNumBuffer(int numBuffer) {
 		this.numBuffer = numBuffer;
 	}
+	
+	static void heapsort(Comparable[] A) {
+		  // The heap constructor invokes the buildheap method
+		  MaxHeap H = new MaxHeap(A, A.length, A.length);
+		  for (int i=0; i<A.length; i++) {  // Now sort
+		    H.removemax(); // Removemax places max at end of heap
+		  }
+		}
 
 	//TODO
 	/**
@@ -149,8 +157,10 @@ public class HeapSort {
 	  //TODO
 	  // To heapify a subtree rooted with node i which is
 	  // an index in arr[]. n is size of heap
-	  public static void heapify(int arr[], int n, int i)
+	  public void heapify(int arr[], int n, int i)
 	  {
+		  //Buffer largest = buffPool.getBuffer(1);
+		  
 	      int largest = i;  // Initialize largest as root
 	      int l = 2*i + 1;  // left = 2*i + 1
 	      int r = 2*i + 2;  // right = 2*i + 2

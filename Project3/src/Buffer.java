@@ -14,7 +14,7 @@ public class Buffer {
 	private byte[] bytes;
 	private int pos;
 	private boolean dirty;
-	private final static int BLOCK_SIZE = 4096;
+	private final static int BLOCK_SIZE = 32;
 	
 	/**
 	 * 
@@ -30,8 +30,6 @@ public class Buffer {
 		bytes = new byte[BLOCK_SIZE];
 		pos = block * BLOCK_SIZE;
 		dirty = false;
-		
-		
 	}
 	
 	/**
@@ -47,7 +45,7 @@ public class Buffer {
 	 * @return byte[]
 	 */
 	public byte[] read() {
-		//Stats.cacheHits++;
+		Stats.cacheHits++;
 		return bytes;
 	}
 	
@@ -60,7 +58,7 @@ public class Buffer {
 		file.seek(pos);
 		file.write(bytes);
 		dirty = false;
-		//Stats.diskWrites++;
+		Stats.diskWrites++;
 	}
 	
 	/**
@@ -84,7 +82,7 @@ public class Buffer {
 			file.seek(pos);
 			file.write(bytes);
 			dirty = false;
-			//Stats.diskWrites++;
+			Stats.diskWrites++;
 		}
 		
 	}

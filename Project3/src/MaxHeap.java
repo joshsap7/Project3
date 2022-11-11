@@ -49,15 +49,16 @@ public class MaxHeap {
 
   // Moves an element down to its correct place
   private void siftDown(int pos) {
-    while (!isLeaf(pos)) {
-      int child = leftChild(pos);
+	int posy = pos;
+    while (!isLeaf(posy)) {
+      int child = leftChild(posy);
       if ((child + 1 < n) && isGreaterThan(child + 1, child)) {
         child = child + 1; // child is now index with the greater value
       }
-      if (!isGreaterThan(child, pos)) {
+      if (!isGreaterThan(child, posy)) {
         return; // stop early
       }
-      swap(pos, child);
+      swap(posy, child);
       pos = child; // keep sifting down
     }
   }
@@ -65,9 +66,10 @@ public class MaxHeap {
 
   // swaps the elements at two positions
   private void swap(int pos1, int pos2) {
-    Comparable temp = heap[pos1];
-    heap[pos1] = heap[pos2];
-    heap[pos2] = temp;
+    Record temp = new Record(0, 0);
+    temp.setTo(heap.get(pos1));
+    heap.put(heap.get(pos2), pos1);
+    heap.put(temp, pos2);
   }
 
   // does comparison used for checking heap validity

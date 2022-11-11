@@ -11,7 +11,7 @@ public class Buffer {
 	
 	private RandomAccessFile file;
 	private int block;
-	private byte[] bytes;
+	private Record[] bytes;
 	private int pos;
 	private boolean dirty;
 	private final static int BLOCK_SIZE = 32;
@@ -27,7 +27,7 @@ public class Buffer {
 		
 		this.file = file;
 		this.block = block;
-		bytes = new byte[BLOCK_SIZE];
+		bytes = new Record[BLOCK_SIZE];
 		pos = block * BLOCK_SIZE;
 		dirty = false;
 	}
@@ -44,7 +44,7 @@ public class Buffer {
 	 * Gets the bytes
 	 * @return byte[]
 	 */
-	public byte[] read() {
+	public Record[] read() {
 		Stats.cacheHits++;
 		return bytes;
 	}
@@ -66,7 +66,7 @@ public class Buffer {
 	 * @param bytes
 	 * 				bytes to be written
 	 */
-	public void write(byte[] bytes) {
+	public void write(Record[] bytes) {
 		this.bytes = bytes;
 		dirty = true;
 		
@@ -80,12 +80,21 @@ public class Buffer {
 		
 		if(dirty) {
 			file.seek(pos);
-			file.write(bytes);
+			byte[] arr = new byte[bytes.length];
+			for (int i = 0; i < bytes.length; i++) {
+				
+			}
+			file.write();
 			dirty = false;
 			Stats.diskWrites++;
 		}
 		
 	}
+	
+	public Record get(int index) {
+		return bytes[index - pos];
+	}
+	
 	
 
 }

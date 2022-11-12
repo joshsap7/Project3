@@ -1,34 +1,32 @@
-
 /**
- * Stat Class
+ * Stat class
  * 
- * @author jsapirstein, nahomk
- * @version 10/25/22
+ * @author Josh Sapirstein (jsapirstein)
+ * @author Nahom Kifetew (nahomk)
+ * @version 11/1/22
  */
 public class Stats {
 	
-    public static String fileName;
-    public static int cacheHits = 0;
-    public static int diskReads = 0;
-    public static int diskWrites = 0;
-    public static long executionTime = 0;
-
-
-    /**
-     * Creates the output to be written to the stat file
-     *
-     * @return String
-     */
-    public static String output()
-    {
-        String output = "";
-        output += "\nSort on " + fileName;
-        output += "\nCache Hits: " + cacheHits;
-        output += "\nDisk Reads: " + diskReads;
-        output += "\nDisk Writes: " + diskWrites;
-        output += "\nTime is " + executionTime;
-
-        return output;
-    }
+	/**
+	 * Public fields that keep track of all stats
+	 */
+	public static String fileName;
+	public static int cacheHit = 0;
+	public static int cacheMiss = 0;
+	public static int diskRead = 0;
+	public static int diskWrite = 0;
+	public static long time = 0;
+	
+	public static String output() {
+		
+		String output = "Heap sort statistics";
+		output += "\nData file name: " + fileName;
+		output += "\nCache hits: " + cacheHit;
+		output += "\nCache misses: " + cacheMiss;
+		output += "\nDisk reads: " + diskRead;
+		output += "\nDisk writes: " + diskWrite;
+		output += "\nSort execution time: " + time + "ms";
+		
+		return output;
+	}
 }
-

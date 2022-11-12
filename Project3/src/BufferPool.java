@@ -1,135 +1,125 @@
 import java.io.File;
-import java.nio.ByteBuffer;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
 /**
  * BufferPool Class
  * 
- * @author jsapirstein, nahomk
- * @version 10/25/22
+ * @author Josh Sapirstein (jsapirstein)
+ * @author Nahom Kifetew (nahomk)
+ * @version 11/1/22
  */
 public class BufferPool {
 	
+	/**
+	 * Private fields for the BufferPool
+	 */
 	private RandomAccessFile file;
+	private FiniteLinkedPriorityQueue<Buffer> lru;
+	private int blockSize;
 	private Buffer[] pool;
-	private int numBlocks;
-	private Buffer lru;
-	private final static int BLOCK_SIZE  = 4096;
-    private final static int RECORD_SIZE = 4;
+	private int maxBuffers;
 	
 	/**
-	 * Constructor for BufferPool
+	 * Creates a BufferPool to be used by the program
 	 * @param fileName
-	 * 					file
-	 * @param numBuffer
-	 * 					number of Buffers
-	 * @throws IOException 
+	 * 				File that BufferPool uses
+	 * @param numBuffers
+	 * 				Number of buffers that the BufferPool uses
+	 * @param blockSize
+	 * 				The size of the blocks of data in the Buffers
+	 * @throws IOException
 	 */
-	public BufferPool(File fileName, int numBuffer) throws IOException {
+	public BufferPool(File fileName, int numBuffers, int blockSize) throws IOException
+	{
+		this.blockSize = blockSize;
 		
-		file = new RandomAccessFile(fileName, "rw");
-		numBlocks = (int)file.length() / BLOCK_SIZE;
-		setPool(new Buffer[numBuffer]);
+		if (fileName.exists()) { 
+			file = new RandomAccessFile(fileName, "rw");
+			maxBuffers = ((int) file.length() / blockSize);
+			pool = new Buffer[maxBuffers];
+			lru = new FiniteLinkedPriorityQueue<Buffer>(numBuffers);
+		}
+		else {
+			throw new FileNotFoundException(); 
+		}
 	}
 	
 	/**
-	 * Gets the number of blocks
+	 * Gets the size of the BufferPool
 	 * @return int
 	 */
-	public int getNumBlocks() {
-		return numBlocks;
+	public int size()
+	{
+		return maxBuffers;
 	}
 	
 	/**
-	 * Gets the pool
-	 * @return Buffer[]
+	 * Flushes the entire buffer pool
 	 */
-	public Buffer[] getPool() {
-		return pool;
+	public void flush()
+	{
+		for (int i = 0; i < maxBuffers; i++) {
+			
+			pool[i].flush();
+			
+		}
 	}
-
+	
 	/**
-	 * Sets the pool of Buffers
-	 * @param pool
-	 * 			 The pool of buffers
-	 */
-	public void setPool(Buffer[] pool) {
-		this.pool = pool;
-	}
-
-	/**
-	 * Gets the buffer
+	 * Gets the Buffer at a specified block
+	 * @param block
+	 * 			the block number
 	 * @return Buffer
 	 */
-	public Buffer getBuffer(int block) throws IOException {
+	public Buffer get(int block) {
 		
-		Buffer buffer;
-		boolean exists = this.search(block);
-		
-		if (!exists) {
-			buffer = new Buffer(file, block);
-			buffer.readFile();
-			this.insert(buffer);
+		if (pool[block] == null) {
+			
+			pool[block] = createBuffer(block);
+			
 		}
 		
-		return lru;
-		
-	}
-	
-	/**
-	 * Inserts the buffer into the pool
-	 * @param buffer
-	 * @throws IOException
-	 */
-	public void insert(Buffer buffer) throws IOException {
-		
-		Buffer remove = new Buffer(file, 0); //queue enqueue buffer //TODO
-		
-		if (remove != null) {
-			remove.writeFile();
-		}
-		
-	}
-	
-	/**
-	 * Gets the key of a specified index
-	 * @param index
-	 * 				index
-	 * @return short
-	 * @throws IOException
-	 */
-	public short getKey(int index) throws IOException {
-		int block = index * RECORD_SIZE / BLOCK_SIZE;
-		int pos = (index * RECORD_SIZE) % BLOCK_SIZE;
-		return ByteBuffer.wrap(getBuffer(block).read()).getShort(pos);
-	}
-	
-	/**
-	 * Flushes the buffer pool
-	 * @throws IOException
-	 */
-	public void flush() throws IOException {
-		
-		Buffer remove = new Buffer(file, 0); //pool dequeue //TODO
-		
-		while (remove != null) {
-			remove.writeFile();
-			remove = new Buffer(file, 0); //pool dequeue //TODO
-		}
-	}
-	
-	/**
-	 * Private helper method to find if a buffer exists
-	 * @param block
-	 * 				block
-	 * @return boolean
-	 */
-	private boolean search(int block) {
-		
-		//TODO
-		
-		return true;
+		return pool[block];
 	}
 
+	/**
+	 * Lets the queue know that the buffer has been used
+	 * @param buffer
+	 * 				The buffer that was used
+	 */
+	public void used(Buffer buffer)
+	{
+		Buffer remove = lru.insertOrPromote(buffer);
+		
+		if (remove != null) {
+			
+			remove.flush();
+			
+		}
+	}
+	
+	/**
+	 * Lets the queue know that a buffer needs to be flushed
+	 * @param buffer
+	 * 				The buffer that needs to be flushed
+	 */
+	public void flushed(Buffer buffer)
+	{
+		lru.remove(buffer);
+	}
+	
+	/**
+	 * Helper method that creates a new Buffer to be added to the BufferPool
+	 * @param block
+	 * 				the block of bytes
+	 * @return Buffer
+	 */
+	private Buffer createBuffer(int block)
+	{
+		assert(block < maxBuffers);
+		return new Buffer(this, file, block * blockSize, blockSize);
+	}
+	
 }

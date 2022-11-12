@@ -49,7 +49,7 @@ public class CheckFile {
             }
         }
         catch (EOFException e) {
-            System.out.println(reccnt + " records processed");
+            //System.out.println(reccnt + " records processed");
         }
         in.close();
         return !isError;

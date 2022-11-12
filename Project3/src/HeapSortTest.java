@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 import org.junit.Test;
 
 import student.TestCase;
@@ -13,29 +15,26 @@ public class HeapSortTest extends TestCase {
     /**
      * An artificial test to get initial coverage for the
      * main method. Delete or modify this test.
+     * @throws Exception 
      */
-    @Test
-    public void testMain() {
-        //HeapSort dum = new HeapSort();
-        assertNotNull(dum);
-        //HeapSort.main(new String[3]);
-        assertEquals(systemOut().getHistory(), ""); // check that nothing was printed out
+    public void testMain() throws Exception {
+        HeapSort dum = new HeapSort();
+        ByteFileGenerator bfg = new ByteFileGenerator();
+        CheckFile cf = new CheckFile();
+        bfg.generate(1024);
+        
+        String[] strs = new String[3];
+        
+        strs[0] = "input_sample.txt";
+        strs[1] = "4";
+        strs[2] = "output_sample.txt";
+        
+        HeapSort.main(strs);
+        
+        assertTrue(cf.checkFile(strs[0]));
+        
+        //assertEquals(systemOut().getHistory(), ""); // check that nothing was printed out
     }
     
-    
-    public void testHeapSort() {
-    	
-		int[] arr = {5, 2, 4, 12, 6, 3, 1, 56, 32, 523, 234, 134, 12314};
-    	
-    	int[] sorted = MaxHeap.sort(arr);
-    	
-    	String printableArr = "[";
-    	
-    	for(int i = 0; i < sorted.length; i++) {
-    		printableArr += sorted[i] + ", ";
-    	}
-    	
-    	System.out.println(printableArr);
-    }
 
 }

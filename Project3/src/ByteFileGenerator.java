@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class ByteFileGenerator {
     public ByteFileGenerator() {
-    }
+    } 
 
 
     /**
@@ -24,7 +24,7 @@ public class ByteFileGenerator {
      */
     public void generate(int numRecords) throws IOException {
 
-        File file = new File("input_sample.txt");
+        File file = new File("input_sample3.txt");
         DataOutputStream outs = new DataOutputStream(new FileOutputStream(file,
             false));
         for (int j = 0; j < numRecords; j++) {

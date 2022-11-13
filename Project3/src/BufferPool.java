@@ -11,7 +11,6 @@ import java.io.RandomAccessFile;
  * @version 11/1/22
  */
 public class BufferPool {
-	
 	/**
 	 * Private fields for the BufferPool
 	 */
@@ -31,7 +30,8 @@ public class BufferPool {
 	 * 				The size of the blocks of data in the Buffers
 	 * @throws IOException
 	 */
-	public BufferPool(File fileName, int numBuffers, int blockSize) throws IOException
+	public BufferPool(File fileName, int numBuffers,
+			int blockSize) throws IOException
 	{
 		this.blockSize = blockSize;
 		
@@ -118,7 +118,7 @@ public class BufferPool {
 	 */
 	private Buffer createBuffer(int block)
 	{
-		assert(block < maxBuffers);
+		assert (block < maxBuffers);
 		return new Buffer(this, file, block * blockSize, blockSize);
 	}
 	

@@ -17,10 +17,10 @@
  * @param <T> The type of the objects stored in here.
  */
 public class FiniteLinkedPriorityQueue<T> {
-	
-	/**
-	 * Fields for the queue
-	 */
+
+    /**
+     * Nodes
+     */
 	private FLPQNode head;
 	private FLPQNode tail;
 	
@@ -30,7 +30,7 @@ public class FiniteLinkedPriorityQueue<T> {
 	 */
 	public FiniteLinkedPriorityQueue(int size)
 	{
-		
+        // The sentinel nodes.
 		head = new FLPQNode(null);
 		tail = new FLPQNode(null);
 		
@@ -63,11 +63,11 @@ public class FiniteLinkedPriorityQueue<T> {
 				removeNode(node);
 				
 				// Insert a null at the end.
-				FLPQNode nullNode = new FLPQNode(null);
-				nullNode.setNext(tail);
-				nullNode.setPrev(tail.getPrev());
-				tail.getPrev().setNext(nullNode);
-				tail.setPrev(nullNode);
+				FLPQNode null_node = new FLPQNode(null);
+				null_node.setNext(tail);
+				null_node.setPrev(tail.getPrev());
+				tail.getPrev().setNext(null_node);
+				tail.setPrev(null_node);
 				
 				return;
 			}
@@ -85,7 +85,7 @@ public class FiniteLinkedPriorityQueue<T> {
 	{
 		// Always insert on null insertions.
 		if (data == null) {
-			return insert(data);
+		    return insert(data);
 		}
 		
 		FLPQNode node = head;
